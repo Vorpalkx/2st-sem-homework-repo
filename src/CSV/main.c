@@ -1,5 +1,5 @@
 #include "functions.h"
-#include "parcer.h"
+#include "parser.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,6 +10,7 @@ int main(int argc, char* argv[])
         fprintf(stderr, "Incorrect number of arguments!\n");
         return 2;
     }
+
     FILE* file = fopen(argv[1], "r");
     if (file == NULL) {
         perror("Opening the source file");

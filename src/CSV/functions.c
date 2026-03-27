@@ -14,7 +14,7 @@ void frameTitle(int* maxColumns, int numColumn, FILE* out)
 {
     fputc('+', out);
 
-    for (int i = 0; i <= numColumn; i++) {
+    for (int i = 0; i < numColumn; i++) {
         printChars('=', maxColumns[i] + 2, out);
         fputc('+', out);
     }
@@ -26,7 +26,7 @@ void frameRegular(int* maxColumns, int numColumn, FILE* out)
 {
     fputc('+', out);
 
-    for (int i = 0; i <= numColumn; i++) {
+    for (int i = 0; i < numColumn; i++) {
         printChars('-', maxColumns[i] + 2, out);
         fputc('+', out);
     }
@@ -34,20 +34,26 @@ void frameRegular(int* maxColumns, int numColumn, FILE* out)
     fputc('\n', out);
 }
 
-void fprintField(int* maxColumns, FILE* out, char* line, int numLine)
+void fprintField(int* maxColumns, FILE* out, char* line, int numLine, int numColumn)
 {
     fputc('|', out);
 
     char* token;
     char* running = line;
-    for (int i = 0; (token = strsep(&running, ",")) != NULL; i++) {
-        char* endfield;
-        (void)strtod(token, &endfield);
+    for (int i = 0; i < numColumn; i++) {
+        token = strsep(&running, ",");
+        if (token != NULL) {
+            char* endfield;
+            (void)strtod(token, &endfield);
 
-        if (*endfield != '\0' || numLine == 0) {
-            fprintf(out, " %-*s |", maxColumns[i], token);
+            if (*endfield != '\0' || numLine == 0) {
+                fprintf(out, " %-*s |", maxColumns[i], token);
+            } else {
+                fprintf(out, " %*s |", maxColumns[i], token);
+            }
         } else {
-            fprintf(out, " %*s |", maxColumns[i], token);
+            printChars(' ', maxColumns[i] + 2, out);
+            fputc('|', out);
         }
     }
     fputc('\n', out);
@@ -67,7 +73,7 @@ int fprintTable(int* maxColumns, int numColumn, FILE* file, const char* filename
     size_t lenBuf = 0;
     for (int i = 0; getline(&line, &lenBuf, file) != -1; i++) {
         line[strcspn(line, "\n")] = 0;
-        fprintField(maxColumns, out, line, i);
+        fprintField(maxColumns, out, line, i, numColumn);
 
         if (i == 0) {
             frameTitle(maxColumns, numColumn, out);
