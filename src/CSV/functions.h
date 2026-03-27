@@ -2,4 +2,4 @@
 
 #include <stdio.h>
 
-int fprintTable(int *maxColumns, int numColumn, FILE *file, const char *filename);
+int fprintTable(int* maxColumns, int numColumn, FILE* file, const char* filename);

@@ -4,9 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
     if (argc != 3) {
-        fprintf(stderr,"Incorrect number of arguments!\n");
+        fprintf(stderr, "Incorrect number of arguments!\n");
         return 2;
     }
     FILE* file = fopen(argv[1], "r");
@@ -15,16 +16,30 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    int capacity = 50;
-    int *maxColumns = calloc(capacity, sizeof(int));
+    size_t capacity = 50;
+    int* maxColumns = calloc(capacity, sizeof(int));
     if (maxColumns == NULL) {
-        fprintf(stderr, "Memory allocation error");
+        fclose(file);
+        perror("Memory allocation error");
         return 3;
     }
 
     int numColumn = columnWidth(&maxColumns, &capacity, file);
+    if (numColumn <= 0) {
+        free(maxColumns);
+        fclose(file);
+        if (numColumn == 0) {
+            fprintf(stderr, "No columns found or file is empty.\n");
+            return 4;
+        }
+        return 3;
+    }
 
-    fprintTable(maxColumns, numColumn, file, argv[2]); 
+    if (fprintTable(maxColumns, numColumn, file, argv[2]) != 0) {
+        free(maxColumns);
+        fclose(file);
+        return 1;
+    }
 
     free(maxColumns);
     fclose(file);
