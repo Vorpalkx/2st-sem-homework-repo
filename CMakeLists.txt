@@ -1,2 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
-project(MyProject C)
+project(project)
+
+set(CMAKE_C_STANDARD 11)
+
+add_subdirectory(src/CSV)
