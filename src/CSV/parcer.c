@@ -27,7 +27,9 @@ int columnWidth(int** maxColumns, size_t* currentCapacity, FILE* file)
                     return -1;
                 }
 
-                for (size_t j = *currentCapacity; j < newCapacity; j++) temp[j] = 0;
+                for (size_t j = *currentCapacity; j < newCapacity; j++) {
+                    temp[j] = 0;
+                }
 
                 *maxColumns = temp;
                 *currentCapacity = newCapacity;
